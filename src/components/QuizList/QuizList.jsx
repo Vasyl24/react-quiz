@@ -1,28 +1,32 @@
 import { Link } from 'react-router-dom';
-import { MainTitle, QuizBackground } from './QuizList.styled';
-import { quiz } from 'quiz';
+import { AddQuizLink, MainTitle, QuizBackground } from './QuizList.styled';
+// import { quiz } from 'quiz';
 
-const QuizList = () => {
-  localStorage.setItem('quiz', JSON.stringify(quiz));
-
+const QuizList = ({ setId }) => {
   const getQuiz = localStorage.getItem('quiz');
   const parsedQuiz = JSON.parse(getQuiz);
 
-  const { quizName, questions } = parsedQuiz;
+  const { notices } = parsedQuiz;
 
   return (
     <>
       <MainTitle>Quizes</MainTitle>
-
+      <AddQuizLink to={'/add'}>Add Quiz +</AddQuizLink>
       <ul>
-        <Link to={'/quiz'}>
-          <li>
-            <QuizBackground>
-              <h3>{quizName}</h3>
-              <p>Number of questions {questions.length}</p>
-            </QuizBackground>
+        {notices.map((notice, index) => (
+          <li key={index} id={notice.id}>
+            <Link
+              to={'/quiz'}
+              onClick={e => setId(e.currentTarget.id)}
+              id={notice.id}
+            >
+              <QuizBackground>
+                <h3>{notice.quizName}</h3>
+                <p>Number of questions {notice.questions.length}</p>
+              </QuizBackground>
+            </Link>
           </li>
-        </Link>
+        ))}
       </ul>
     </>
   );

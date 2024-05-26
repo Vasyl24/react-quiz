@@ -12,74 +12,28 @@ import {
 } from './QuizItem.styled';
 import Result from 'components/Result/Result';
 import { nanoid } from 'nanoid';
-import { quiz } from 'quiz';
+// import { quiz } from 'quiz';
 
-const QuizItem = () => {
-  // const quiz = {
-  //   quizName: 'React Quiz',
-  //   id: 1,
-  //   questions: [
-  //     {
-  //       questionNum: 0,
-  //       questionText: 'Which planet is known as the Red Planet?',
-  //       answList: ['Earth', 'Mars', 'Venus', 'Jupiter'],
-  //       rightAnswer: 'Mars',
-  //     },
-  //     {
-  //       questionNum: 1,
-  //       questionText: 'What is the capital of France?',
-  //       answList: ['Madrid', 'Berlin', 'Paris', 'Rome'],
-  //       rightAnswer: 'Paris',
-  //     },
-  //     {
-  //       questionNum: 2,
-  //       questionText: 'Who wrote "Romeo and Juliet"?',
-  //       answList: [
-  //         'Charles Dickens',
-  //         'William Shakespeare',
-  //         'Jane Austen',
-  //         'Mark Twain',
-  //       ],
-  //       rightAnswer: 'William Shakespeare',
-  //     },
-  //     {
-  //       questionNum: 3,
-  //       questionText: 'What is the largest ocean on Earth?',
-  //       answList: [
-  //         'Atlantic Ocean',
-  //         'Indian Ocean',
-  //         'Arctic Ocean',
-  //         'Pacific Ocean',
-  //       ],
-  //       rightAnswer: 'Pacific Ocean',
-  //     },
-  //     {
-  //       questionNum: 4,
-  //       questionText: 'Which element has the chemical symbol "O"?',
-  //       answList: ['Gold', 'Oxygen', 'Hydrogen', 'Helium'],
-  //       rightAnswer: 'Oxygen',
-  //     },
-  //     {
-  //       questionNum: 5,
-  //       questionText: 'In which year did the Titanic sink?',
-  //       answList: ['1910', '1912', '1914', '1916'],
-  //       rightAnswer: '1912',
-  //     },
-  //   ],
-  // };
-
+const QuizItem = ({ id }) => {
   const [isAnswered, setIsAnswered] = useState(false);
   const [showModal, setShowModal] = useState(0);
   const [userAnswer, setUserAnswer] = useState(null);
   const [allAnswers, setAllAnswers] = useState([]);
   const [rightAnswersNum, setRightAnswersNum] = useState(0);
 
-  localStorage.setItem('quiz', JSON.stringify(quiz));
+  // localStorage.setItem('quiz', JSON.stringify(quiz));
 
   const questNum = localStorage.getItem('quiz');
   const parsedQuiz = JSON.parse(questNum);
+  // console.log(id);
+  // console.log(parsedQuiz.notices[id]);
+  console.log(id);
+  console.log(parsedQuiz.notices[id]);
+  // const [quizIndex, setQuizIndex] = useState(0); // Стан для вибору тесту
+  const quizComponents = parsedQuiz.notices;
+  const questions = parsedQuiz.notices[id].questions;
+  const quizName = parsedQuiz.notices[id].quizName;
 
-  const { quizName, questions } = parsedQuiz;
   const isLastQuestion = showModal === questions.length - 1;
   const rightAnswers = [];
 
@@ -120,7 +74,7 @@ const QuizItem = () => {
       event.preventDefault();
 
       localStorage.removeItem('quizAnswers');
-      console.log(localStorage.getItem('quizAnswers'));
+      // console.log(localStorage.getItem('quizAnswers'));
     };
 
     window.addEventListener('beforeunload', handleBeforeUnload);
@@ -131,57 +85,61 @@ const QuizItem = () => {
 
   return (
     <>
-      {questions.map((question, index) =>
-        showModal === question.questionNum ? (
-          <QuizBackground key={index}>
-            <QuizTitle>{quizName}</QuizTitle>
-            <QuestionNumber>
-              Question <span>{question.questionNum + 1} </span>
-              of
-              <span> {questions.length}</span>
-            </QuestionNumber>
-            <QuestionText>{question.questionText}</QuestionText>
-            <form>
-              <AnswerList>
-                {question.answList.map((answerItem, idx) => {
-                  const id = `answer-${nanoid()}`;
-                  return (
-                    <AnswerItem key={idx}>
-                      <AnswerInput
-                        type="radio"
-                        name="answer"
-                        id={`answer-${id}`}
-                        value={answerItem}
-                        onChange={handleChooseAnswer}
-                      />
-                      <AnswerLabel htmlFor={`answer-${id}`}>
-                        {answerItem}
-                      </AnswerLabel>
-                    </AnswerItem>
-                  );
-                })}
-              </AnswerList>
-            </form>
+      {quizComponents.map(
+        quizComponent =>
+          quizComponent.id === id &&
+          questions.map((question, index) =>
+            showModal === question.questionNum ? (
+              <QuizBackground key={index}>
+                <QuizTitle>{quizName}</QuizTitle>
+                <QuestionNumber>
+                  Question <span>{question.questionNum + 1} </span>
+                  of
+                  <span> {questions.length}</span>
+                </QuestionNumber>
+                <QuestionText>{question.questionText}</QuestionText>
+                <form>
+                  <AnswerList>
+                    {question.answList.map((answerItem, idx) => {
+                      const id = `answer-${nanoid()}`;
+                      return (
+                        <AnswerItem key={idx}>
+                          <AnswerInput
+                            type="radio"
+                            name="answer"
+                            id={`answer-${id}`}
+                            value={answerItem}
+                            onChange={handleChooseAnswer}
+                          />
+                          <AnswerLabel htmlFor={`answer-${id}`}>
+                            {answerItem}
+                          </AnswerLabel>
+                        </AnswerItem>
+                      );
+                    })}
+                  </AnswerList>
+                </form>
 
-            {isLastQuestion ? (
-              <NextBtn
-                type="button"
-                onClick={chooseAnswer}
-                disabled={!isAnswered}
-              >
-                Finish
-              </NextBtn>
-            ) : (
-              <NextBtn
-                type="button"
-                onClick={chooseAnswer}
-                disabled={!isAnswered}
-              >
-                Next
-              </NextBtn>
-            )}
-          </QuizBackground>
-        ) : null
+                {isLastQuestion ? (
+                  <NextBtn
+                    type="button"
+                    onClick={chooseAnswer}
+                    disabled={!isAnswered}
+                  >
+                    Finish
+                  </NextBtn>
+                ) : (
+                  <NextBtn
+                    type="button"
+                    onClick={chooseAnswer}
+                    disabled={!isAnswered}
+                  >
+                    Next
+                  </NextBtn>
+                )}
+              </QuizBackground>
+            ) : null
+          )
       )}
 
       {showModal > questions.length - 1 && (

@@ -1,11 +1,18 @@
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
-export const MainTitle = styled.div`
+export const MainTitle = styled.h1`
+  margin-bottom: 24px;
+
+  font-size: 48px;
+`;
+
+export const AddQuizLink = styled(Link)`
+  display: block;
   margin-bottom: 24px;
 
   font-size: 36px;
 `;
-
 export const QuizBackground = styled.div`
   margin-bottom: 24px;
   padding: 24px 16px;
