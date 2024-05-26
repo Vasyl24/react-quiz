@@ -17,7 +17,10 @@ const QuizList = ({ setId }) => {
           <li key={index} id={notice.id}>
             <Link
               to={'/quiz'}
-              onClick={e => setId(e.currentTarget.id)}
+              onClick={e => {
+                setId(e.currentTarget.id);
+                console.log(e.currentTarget.id);
+              }}
               id={notice.id}
             >
               <QuizBackground>

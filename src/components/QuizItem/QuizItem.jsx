@@ -25,19 +25,15 @@ const QuizItem = ({ id }) => {
 
   const questNum = localStorage.getItem('quiz');
   const parsedQuiz = JSON.parse(questNum);
-  // console.log(id);
-  // console.log(parsedQuiz.notices[id]);
-  console.log(id);
-  console.log(parsedQuiz.notices[id]);
-  // const [quizIndex, setQuizIndex] = useState(0); // Стан для вибору тесту
-  const quizComponents = parsedQuiz.notices;
-  const questions = parsedQuiz.notices[id].questions;
-  const quizName = parsedQuiz.notices[id].quizName;
 
-  const isLastQuestion = showModal === questions.length - 1;
+  const notice = parsedQuiz.notices.find(notice => notice.id === id);
+
+  const quizComponents = parsedQuiz.notices;
+
+  const isLastQuestion = showModal === notice.questions.length - 1;
   const rightAnswers = [];
 
-  questions.map(question => rightAnswers.push(question.rightAnswer));
+  notice.questions.map(question => rightAnswers.push(question.rightAnswer));
 
   function handleChooseAnswer(e) {
     setIsAnswered(true);
@@ -88,14 +84,14 @@ const QuizItem = ({ id }) => {
       {quizComponents.map(
         quizComponent =>
           quizComponent.id === id &&
-          questions.map((question, index) =>
+          notice.questions.map((question, index) =>
             showModal === question.questionNum ? (
               <QuizBackground key={index}>
-                <QuizTitle>{quizName}</QuizTitle>
+                <QuizTitle>{notice.quizName}</QuizTitle>
                 <QuestionNumber>
                   Question <span>{question.questionNum + 1} </span>
                   of
-                  <span> {questions.length}</span>
+                  <span> {notice.questions.length}</span>
                 </QuestionNumber>
                 <QuestionText>{question.questionText}</QuestionText>
                 <form>
@@ -142,8 +138,11 @@ const QuizItem = ({ id }) => {
           )
       )}
 
-      {showModal > questions.length - 1 && (
-        <Result rightAnswersNum={rightAnswersNum} question={questions.length} />
+      {showModal > notice.questions.length - 1 && (
+        <Result
+          rightAnswersNum={rightAnswersNum}
+          question={notice.questions.length}
+        />
       )}
     </>
   );

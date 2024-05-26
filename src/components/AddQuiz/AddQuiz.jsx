@@ -1,5 +1,20 @@
 import { useState } from 'react';
-import { QuizQuestion, QuizTitle, ResultTitle, Title } from './AddQuiz.styled';
+import {
+  AnswerInput,
+  AnswerItem,
+  AnswerLabel,
+  AnswerList,
+  Input,
+  InputItems,
+  Label,
+  QuestionNumber,
+  QuestionText,
+  QuizQuestion,
+  QuizTitle,
+  ResultTitle,
+  SubmitBtn,
+  Title,
+} from './AddQuiz.styled';
 import { nanoid } from 'nanoid';
 
 const AddQuiz = () => {
@@ -99,82 +114,88 @@ const AddQuiz = () => {
   return (
     <>
       <Title>Create quiz</Title>
-      <form>
-        <label htmlFor="quiz-title">Quiz title</label>
-        <input
-          type="text"
-          id="quiz-title"
-          value={inputTitleValue}
-          onChange={handleTitleWrite}
-        />
-        <button type="submit" onClick={addTitle}>
-          Add title
-        </button>
-      </form>
+      <ul>
+        <InputItems>
+          <form>
+            <Label htmlFor="quiz-title">Quiz title</Label>
+            <Input
+              type="text"
+              id="quiz-title"
+              value={inputTitleValue}
+              onChange={handleTitleWrite}
+            />
+            <SubmitBtn type="submit" onClick={addTitle}>
+              Add title
+            </SubmitBtn>
+          </form>
+        </InputItems>
+        <InputItems>
+          <form action="">
+            <Label htmlFor="quiz-question">Question</Label>
+            <Input
+              type="text"
+              id="quiz-question"
+              value={inputQuestionValue}
+              onChange={handleQuestionWrite}
+            />
 
-      <form action="">
-        <label htmlFor="quiz-question">Question</label>
-        <input
-          type="text"
-          id="quiz-question"
-          value={inputQuestionValue}
-          onChange={handleQuestionWrite}
-        />
+            <SubmitBtn type="submit" onClick={addQuestion}>
+              Add question
+            </SubmitBtn>
+          </form>
+        </InputItems>
+        <InputItems>
+          <form action="">
+            <Label htmlFor="quiz-response">Response</Label>
+            <Input
+              type="text"
+              id="quiz-response"
+              value={inputResponseValue}
+              onChange={handleResponseWrite}
+            />
 
-        <button type="submit" onClick={addQuestion}>
-          Add question
-        </button>
-      </form>
-
-      <form action="">
-        <label htmlFor="quiz-response">Response</label>
-        <input
-          type="text"
-          id="quiz-response"
-          value={inputResponseValue}
-          onChange={handleResponseWrite}
-        />
-
-        <button
-          type="submit"
-          onClick={addResponse}
-          disabled={quizQuestion.answList.length === 5}
-        >
-          Add response
-        </button>
-      </form>
+            <SubmitBtn
+              type="submit"
+              onClick={addResponse}
+              disabled={quizQuestion.answList.length === 5}
+            >
+              Add response
+            </SubmitBtn>
+          </form>
+        </InputItems>
+      </ul>
 
       <ResultTitle>Previous quiz view</ResultTitle>
 
       <form>
-        {/* <QuizTitle>{quizForm.quizName}</QuizTitle> */}
+        <QuizTitle>{quizForm.quizName}</QuizTitle>
         <QuizQuestion>{quizQuestion.questionText}</QuizQuestion>
 
-        <ul>
+        <AnswerList>
           {quizQuestion.answList.map((answer, index) => {
             const id = `answer-${nanoid()}`;
 
             return (
-              <li key={index}>
-                <input
+              <AnswerItem key={index}>
+                <AnswerInput
                   type="radio"
                   id={`answer-${id}`}
                   name="answer"
                   value={answer}
                   onChange={handleChooseAnswer}
                 />
-                <label htmlFor={`answer-${id}`}>{answer}</label>
-              </li>
+                <AnswerLabel htmlFor={`answer-${id}`}>{answer}</AnswerLabel>
+              </AnswerItem>
             );
           })}
-        </ul>
+        </AnswerList>
 
         {quizQuestion.questionText &&
           quizQuestion.answList.length >= 2 &&
           isAnswered && (
-            <button type="submit" onClick={addQuestionForm}>
+            <SubmitBtn type="submit" onClick={addQuestionForm}>
               Confirm
-            </button>
+            </SubmitBtn>
           )}
       </form>
 
@@ -182,34 +203,36 @@ const AddQuiz = () => {
         {quizForm.questions.map((question, index) => (
           <li key={index}>
             <QuizTitle>{quizForm.quizName}</QuizTitle>
-            <h3>
+            <QuestionNumber>
               Question <span>{question.questionNum + 1} </span>
               of
               <span> {quizForm.questions.length}</span>
-            </h3>
-            <p>{question.questionText}</p>
+            </QuestionNumber>
+            <QuestionText>{question.questionText}</QuestionText>
             <form>
-              <ul>
+              <AnswerList>
                 {question.answList.map((answerItem, idx) => {
                   const id = `answer-${nanoid()}`;
 
                   return (
-                    <li key={idx}>
-                      <input
+                    <AnswerItem key={idx}>
+                      <AnswerInput
                         type="radio"
                         name="answer"
                         id={`answer-${id}`}
                         disabled
                       />
-                      <label htmlFor={`answer-${id}`}>{answerItem}</label>
-                    </li>
+                      <AnswerLabel htmlFor={`answer-${id}`}>
+                        {answerItem}
+                      </AnswerLabel>
+                    </AnswerItem>
                   );
                 })}
-              </ul>
+              </AnswerList>
               {quizForm.quizName !== '' && quizForm.questions.length >= 1 && (
-                <button type="submit" onClick={addNewQuiz}>
+                <SubmitBtn type="submit" onClick={addNewQuiz}>
                   Add quiz
-                </button>
+                </SubmitBtn>
               )}
             </form>
           </li>
