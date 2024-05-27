@@ -1,8 +1,10 @@
 import { Link } from 'react-router-dom';
 import { AddQuizLink, MainTitle, QuizBackground } from './QuizList.styled';
-// import { quiz } from 'quiz';
+import { quiz } from 'quiz';
 
 const QuizList = ({ setId }) => {
+  localStorage.setItem('quiz', JSON.stringify(quiz));
+
   const getQuiz = localStorage.getItem('quiz');
   const parsedQuiz = JSON.parse(getQuiz);
 
