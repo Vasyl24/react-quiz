@@ -2,7 +2,7 @@ export const quiz = {
   notices: [
     {
       quizName: 'React Quiz',
-      id: 0,
+      id: 'sfsag-4gag',
       questions: [
         {
           questionNum: 0,
@@ -54,7 +54,7 @@ export const quiz = {
     },
     {
       quizName: 'React Quiz 2',
-      id: 1,
+      id: 'fwhui-2fafa-gs',
       questions: [
         {
           questionNum: 0,
