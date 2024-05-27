@@ -12,23 +12,28 @@ import {
 } from './QuizItem.styled';
 import Result from 'components/Result/Result';
 import { nanoid } from 'nanoid';
-// import { quiz } from 'quiz';
+import { quiz } from 'quiz';
 
 const QuizItem = ({ id }) => {
+  const [initialQuiz, setInitialQuiz] = useState(null);
   const [isAnswered, setIsAnswered] = useState(false);
   const [showModal, setShowModal] = useState(0);
   const [userAnswer, setUserAnswer] = useState(null);
   const [allAnswers, setAllAnswers] = useState([]);
   const [rightAnswersNum, setRightAnswersNum] = useState(0);
 
-  // localStorage.setItem('quiz', JSON.stringify(quiz));
+  const storedQuiz = localStorage.getItem('quiz');
 
-  const questNum = localStorage.getItem('quiz');
-  const parsedQuiz = JSON.parse(questNum);
+  if (storedQuiz) {
+    setInitialQuiz(JSON.parse(storedQuiz));
+  } else {
+    localStorage.setItem('quiz', JSON.stringify(quiz));
+    setInitialQuiz(quiz);
+  }
 
-  const notice = parsedQuiz.notices.find(notice => notice.id === id);
+  const notice = initialQuiz.notices.find(notice => notice.id === id);
 
-  const quizComponents = parsedQuiz.notices;
+  const quizComponents = initialQuiz.notices;
 
   const isLastQuestion = showModal === notice.questions.length - 1;
   const rightAnswers = [];
