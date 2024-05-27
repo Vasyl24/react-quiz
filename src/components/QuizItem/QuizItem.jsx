@@ -12,7 +12,6 @@ import {
 } from './QuizItem.styled';
 import Result from 'components/Result/Result';
 import { nanoid } from 'nanoid';
-// import { useNavigate } from 'react-router-dom';
 // import { quiz } from 'quiz';
 
 const QuizItem = ({ id }) => {
@@ -22,20 +21,14 @@ const QuizItem = ({ id }) => {
   const [allAnswers, setAllAnswers] = useState([]);
   const [rightAnswersNum, setRightAnswersNum] = useState(0);
 
-  // localStorage.setItem('quiz', JSON.stringify(quiz));
-  // const navigate = useNavigate();
-
   const storedQuiz = localStorage.getItem('quiz');
 
-  // useEffect(() => {
-  //   if (!storedQuiz) {
-  //     navigate('/');
-  //   }
-  // }, [storedQuiz, navigate]);
-
   const parsedQuiz = JSON.parse(storedQuiz);
+  const storedId = localStorage.getItem('selectedQuizId');
+  console.log(storedId);
 
-  const notice = parsedQuiz.notices.find(notice => notice.id === id);
+  const notice = parsedQuiz.notices.find(notice => notice.id === storedId);
+  console.log(notice);
 
   const quizComponents = parsedQuiz.notices;
 
@@ -87,11 +80,17 @@ const QuizItem = ({ id }) => {
     };
   }, []);
 
+  useEffect(() => {
+    if (id !== null) {
+      localStorage.setItem('selectedQuizId', id);
+    }
+  }, [id]);
+
   return (
     <>
       {quizComponents.map(
         quizComponent =>
-          quizComponent.id === id &&
+          quizComponent.id === storedId &&
           notice.questions.map((question, index) =>
             showModal === question.questionNum ? (
               <QuizBackground key={index}>
