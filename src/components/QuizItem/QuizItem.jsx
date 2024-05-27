@@ -12,28 +12,32 @@ import {
 } from './QuizItem.styled';
 import Result from 'components/Result/Result';
 import { nanoid } from 'nanoid';
-import { quiz } from 'quiz';
+// import { useNavigate } from 'react-router-dom';
+// import { quiz } from 'quiz';
 
 const QuizItem = ({ id }) => {
-  const [initialQuiz, setInitialQuiz] = useState(null);
   const [isAnswered, setIsAnswered] = useState(false);
   const [showModal, setShowModal] = useState(0);
   const [userAnswer, setUserAnswer] = useState(null);
   const [allAnswers, setAllAnswers] = useState([]);
   const [rightAnswersNum, setRightAnswersNum] = useState(0);
 
+  // localStorage.setItem('quiz', JSON.stringify(quiz));
+  // const navigate = useNavigate();
+
   const storedQuiz = localStorage.getItem('quiz');
 
-  if (storedQuiz) {
-    setInitialQuiz(JSON.parse(storedQuiz));
-  } else {
-    localStorage.setItem('quiz', JSON.stringify(quiz));
-    setInitialQuiz(quiz);
-  }
+  // useEffect(() => {
+  //   if (!storedQuiz) {
+  //     navigate('/');
+  //   }
+  // }, [storedQuiz, navigate]);
 
-  const notice = initialQuiz.notices.find(notice => notice.id === id);
+  const parsedQuiz = JSON.parse(storedQuiz);
 
-  const quizComponents = initialQuiz.notices;
+  const notice = parsedQuiz.notices.find(notice => notice.id === id);
+
+  const quizComponents = parsedQuiz.notices;
 
   const isLastQuestion = showModal === notice.questions.length - 1;
   const rightAnswers = [];
@@ -75,7 +79,6 @@ const QuizItem = ({ id }) => {
       event.preventDefault();
 
       localStorage.removeItem('quizAnswers');
-      // console.log(localStorage.getItem('quizAnswers'));
     };
 
     window.addEventListener('beforeunload', handleBeforeUnload);
