@@ -122,6 +122,21 @@ export const Title = styled.h2`
   text-align: center;
 `;
 
+export const AddQuestionContainer = styled.div`
+  margin-bottom: 24px;
+  display: flex;
+  justify-content: center;
+  gap: 150px;
+`;
+
+export const ResultContainer = styled.div`
+  padding: 16px;
+  width: 450px;
+  height: 370px;
+  border: 1px solid grey;
+  border-radius: 8px;
+`;
+
 export const ResultTitle = styled.h3`
   margin-bottom: 24px;
 

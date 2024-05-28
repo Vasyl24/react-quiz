@@ -1,6 +1,7 @@
 import { nanoid } from 'nanoid';
 import {
   AddButton,
+  AddQuestionContainer,
   AddQuestionList,
   AnswerInput,
   AnswerItem,
@@ -19,6 +20,7 @@ import {
   QuizBackground,
   QuizQuestion,
   QuizTitle,
+  ResultContainer,
   ResultTitle,
   SubmitBtn,
 } from './QuizEdit.styled';
@@ -232,7 +234,7 @@ const QuizEdit = () => {
       </ButtonContainer>
 
       {showAddForm && (
-        <>
+        <AddQuestionContainer>
           <AddQuestionList>
             <InputItems>
               <form>
@@ -270,39 +272,44 @@ const QuizEdit = () => {
               </form>
             </InputItems>
           </AddQuestionList>
-          <ResultTitle>Previous quiz view</ResultTitle>
 
-          <form>
-            <QuizQuestion>{quizQuestion.questionText}</QuizQuestion>
+          <ResultContainer>
+            <ResultTitle>Quiz preview</ResultTitle>
 
-            <AnswerList>
-              {quizQuestion.answList.map((answer, index) => {
-                const id = `answer-${nanoid()}`;
+            <form>
+              <QuizQuestion>{quizQuestion.questionText}</QuizQuestion>
 
-                return (
-                  <AnswerItem key={index}>
-                    <AnswerInput
-                      type="radio"
-                      id={`answer-${id}`}
-                      name="answer"
-                      value={answer}
-                      onChange={handleChooseAnswer}
-                    />
-                    <AnswerLabel htmlFor={`answer-${id}`}>{answer}</AnswerLabel>
-                  </AnswerItem>
-                );
-              })}
-            </AnswerList>
+              <AnswerList>
+                {quizQuestion.answList.map((answer, index) => {
+                  const id = `answer-${nanoid()}`;
 
-            {quizQuestion.questionText &&
-              quizQuestion.answList.length >= 2 &&
-              isAnswered && (
-                <SubmitBtn type="submit" onClick={addQuestionForm}>
-                  Confirm
-                </SubmitBtn>
-              )}
-          </form>
-        </>
+                  return (
+                    <AnswerItem key={index}>
+                      <AnswerInput
+                        type="radio"
+                        id={`answer-${id}`}
+                        name="answer"
+                        value={answer}
+                        onChange={handleChooseAnswer}
+                      />
+                      <AnswerLabel htmlFor={`answer-${id}`}>
+                        {answer}
+                      </AnswerLabel>
+                    </AnswerItem>
+                  );
+                })}
+              </AnswerList>
+
+              {quizQuestion.questionText &&
+                quizQuestion.answList.length >= 2 &&
+                isAnswered && (
+                  <SubmitBtn type="submit" onClick={addQuestionForm}>
+                    Confirm
+                  </SubmitBtn>
+                )}
+            </form>
+          </ResultContainer>
+        </AddQuestionContainer>
       )}
 
       {quizComponents.map(

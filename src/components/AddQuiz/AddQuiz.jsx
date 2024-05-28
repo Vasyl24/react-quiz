@@ -178,7 +178,7 @@ const AddQuiz = () => {
         </InputList>
 
         <ResultContainer>
-          <ResultTitle>Previous quiz view</ResultTitle>
+          <ResultTitle>Quiz preview</ResultTitle>
 
           <QuizTitle>Quiz Title: {quizForm.quizName}</QuizTitle>
           <form>
