@@ -1,16 +1,21 @@
 import { useState } from 'react';
 import {
+  AddQuestionContainer,
   AnswerInput,
   AnswerItem,
   AnswerLabel,
   AnswerList,
+  HomeLink,
   Input,
   InputItems,
+  InputList,
   Label,
   QuestionNumber,
   QuestionText,
+  QuizItem,
   QuizQuestion,
   QuizTitle,
+  ResultContainer,
   ResultTitle,
   SubmitBtn,
   Title,
@@ -115,97 +120,103 @@ const AddQuiz = () => {
 
   return (
     <>
+      <HomeLink to={'/'}>Go home</HomeLink>
+
       <Title>Create quiz</Title>
-      <ul>
-        <InputItems>
+      <AddQuestionContainer>
+        <InputList>
+          <InputItems>
+            <form>
+              <Label htmlFor="quiz-title">Quiz title</Label>
+              <Input
+                type="text"
+                id="quiz-title"
+                value={inputTitleValue}
+                onChange={handleTitleWrite}
+              />
+              <SubmitBtn type="submit" onClick={addTitle}>
+                Add title
+              </SubmitBtn>
+            </form>
+          </InputItems>
+
+          <InputItems>
+            <form action="">
+              <Label htmlFor="quiz-question">Question</Label>
+              <Input
+                type="text"
+                id="quiz-question"
+                value={inputQuestionValue}
+                onChange={handleQuestionWrite}
+              />
+
+              <SubmitBtn type="submit" onClick={addQuestion}>
+                Add question
+              </SubmitBtn>
+            </form>
+          </InputItems>
+
+          <InputItems>
+            <form action="">
+              <Label htmlFor="quiz-response">Response</Label>
+              <Input
+                type="text"
+                id="quiz-response"
+                value={inputResponseValue}
+                onChange={handleResponseWrite}
+              />
+
+              <SubmitBtn
+                type="submit"
+                onClick={addResponse}
+                disabled={quizQuestion.answList.length === 5}
+              >
+                Add response
+              </SubmitBtn>
+            </form>
+          </InputItems>
+        </InputList>
+
+        <ResultContainer>
+          <ResultTitle>Previous quiz view</ResultTitle>
+
+          <QuizTitle>Quiz Title: {quizForm.quizName}</QuizTitle>
           <form>
-            <Label htmlFor="quiz-title">Quiz title</Label>
-            <Input
-              type="text"
-              id="quiz-title"
-              value={inputTitleValue}
-              onChange={handleTitleWrite}
-            />
-            <SubmitBtn type="submit" onClick={addTitle}>
-              Add title
-            </SubmitBtn>
+            <QuizQuestion>{quizQuestion.questionText}</QuizQuestion>
+
+            <AnswerList>
+              {quizQuestion.answList.map((answer, index) => {
+                const id = `answer-${nanoid()}`;
+
+                return (
+                  <AnswerItem key={index}>
+                    <AnswerInput
+                      type="radio"
+                      id={`answer-${id}`}
+                      name="answer"
+                      value={answer}
+                      onChange={handleChooseAnswer}
+                    />
+                    <AnswerLabel htmlFor={`answer-${id}`}>{answer}</AnswerLabel>
+                  </AnswerItem>
+                );
+              })}
+            </AnswerList>
+
+            {quizQuestion.questionText &&
+              quizQuestion.answList.length >= 2 &&
+              isAnswered && (
+                <SubmitBtn type="submit" onClick={addQuestionForm}>
+                  Confirm
+                </SubmitBtn>
+              )}
           </form>
-        </InputItems>
-
-        <InputItems>
-          <form action="">
-            <Label htmlFor="quiz-question">Question</Label>
-            <Input
-              type="text"
-              id="quiz-question"
-              value={inputQuestionValue}
-              onChange={handleQuestionWrite}
-            />
-
-            <SubmitBtn type="submit" onClick={addQuestion}>
-              Add question
-            </SubmitBtn>
-          </form>
-        </InputItems>
-
-        <InputItems>
-          <form action="">
-            <Label htmlFor="quiz-response">Response</Label>
-            <Input
-              type="text"
-              id="quiz-response"
-              value={inputResponseValue}
-              onChange={handleResponseWrite}
-            />
-
-            <SubmitBtn
-              type="submit"
-              onClick={addResponse}
-              disabled={quizQuestion.answList.length === 5}
-            >
-              Add response
-            </SubmitBtn>
-          </form>
-        </InputItems>
-      </ul>
-
-      <ResultTitle>Previous quiz view</ResultTitle>
-
-      <QuizTitle>Quiz Title: {quizForm.quizName}</QuizTitle>
-      <form>
-        <QuizQuestion>{quizQuestion.questionText}</QuizQuestion>
-
-        <AnswerList>
-          {quizQuestion.answList.map((answer, index) => {
-            const id = `answer-${nanoid()}`;
-
-            return (
-              <AnswerItem key={index}>
-                <AnswerInput
-                  type="radio"
-                  id={`answer-${id}`}
-                  name="answer"
-                  value={answer}
-                  onChange={handleChooseAnswer}
-                />
-                <AnswerLabel htmlFor={`answer-${id}`}>{answer}</AnswerLabel>
-              </AnswerItem>
-            );
-          })}
-        </AnswerList>
-
-        {quizQuestion.questionText &&
-          quizQuestion.answList.length >= 2 &&
-          isAnswered && (
-            <SubmitBtn type="submit" onClick={addQuestionForm}>
-              Confirm
-            </SubmitBtn>
-          )}
-      </form>
+        </ResultContainer>
+      </AddQuestionContainer>
 
       <ul>
         {quizForm.questions.map((question, index) => (
-          <li key={index}>
+          <QuizItem key={index}>
             <QuizTitle>{quizForm.quizName}</QuizTitle>
             <QuestionNumber>
               Question <span>{question.questionNum + 1} </span>
@@ -235,11 +246,11 @@ const AddQuiz = () => {
                 })}
               </AnswerList>
             </form>
-          </li>
+          </QuizItem>
         ))}
 
         {quizForm.quizName !== '' && quizForm.questions.length >= 1 && (
-          <SubmitBtn type="submit" onClick={addNewQuiz}>
+          <SubmitBtn type="submit" onClick={addNewQuiz} className="last-btn">
             Add quiz
           </SubmitBtn>
         )}

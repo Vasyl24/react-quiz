@@ -1,9 +1,16 @@
 import { nanoid } from 'nanoid';
 import {
+  AddButton,
+  AddQuestionList,
   AnswerInput,
   AnswerItem,
   AnswerLabel,
   AnswerList,
+  ButtonContainer,
+  CloseBtn,
+  DeleteButton,
+  HomeLink,
+  IconClose,
   Input,
   InputItems,
   Label,
@@ -18,6 +25,7 @@ import {
 import { useEffect, useState } from 'react';
 import { quiz } from 'quiz';
 import { useParams } from 'react-router-dom';
+import icon from '../../assets/sprite.svg';
 
 const QuizEdit = () => {
   const [showDeleteBtn, setShowDeleteBtn] = useState(false);
@@ -201,28 +209,33 @@ const QuizEdit = () => {
 
   return (
     <>
-      <button
-        onClick={() => {
-          setShowDeleteBtn(false);
-          setShowAddForm(true);
-        }}
-      >
-        Add question
-      </button>
-      <button
-        onClick={() => {
-          setShowAddForm(false);
-          setShowDeleteBtn(true);
-        }}
-      >
-        Delete question
-      </button>
+      <ButtonContainer>
+        <HomeLink to={'/'}>Go home</HomeLink>
+
+        <AddButton
+          onClick={() => {
+            setShowDeleteBtn(false);
+            setShowAddForm(true);
+          }}
+        >
+          Add question
+        </AddButton>
+
+        <DeleteButton
+          onClick={() => {
+            setShowAddForm(false);
+            setShowDeleteBtn(true);
+          }}
+        >
+          Delete question
+        </DeleteButton>
+      </ButtonContainer>
 
       {showAddForm && (
         <>
-          <ul>
+          <AddQuestionList>
             <InputItems>
-              <form action="">
+              <form>
                 <Label htmlFor="quiz-question">Question</Label>
                 <Input
                   type="text"
@@ -238,7 +251,7 @@ const QuizEdit = () => {
             </InputItems>
 
             <InputItems>
-              <form action="">
+              <form>
                 <Label htmlFor="quiz-response">Response</Label>
                 <Input
                   type="text"
@@ -256,7 +269,7 @@ const QuizEdit = () => {
                 </SubmitBtn>
               </form>
             </InputItems>
-          </ul>
+          </AddQuestionList>
           <ResultTitle>Previous quiz view</ResultTitle>
 
           <form>
@@ -330,12 +343,14 @@ const QuizEdit = () => {
               </form>
 
               {showDeleteBtn && (
-                <button
+                <CloseBtn
                   id={question.questionNum}
                   onClick={e => handleDeleteQuestion(e)}
                 >
-                  Delete
-                </button>
+                  <IconClose>
+                    <use href={`${icon}#icon-close`}></use>
+                  </IconClose>
+                </CloseBtn>
               )}
             </QuizBackground>
           ))

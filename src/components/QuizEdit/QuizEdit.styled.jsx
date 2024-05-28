@@ -1,6 +1,73 @@
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
+export const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 80px;
+  margin-bottom: 48px;
+`;
+
+export const AddButton = styled.button`
+  padding: 16px 24px;
+  border: 1px solid grey;
+
+  font-size: 20px;
+
+  background: transparent;
+  transition: border 0.3s ease-out, background 0.3s ease-out,
+    color 0.3s ease-out;
+
+  border-radius: 15px;
+
+  &:hover {
+    color: #ffffff;
+    border: 1px solid #ebbf32;
+    background: #ebbf32;
+  }
+`;
+
+export const DeleteButton = styled.button`
+  padding: 16px 24px;
+  border: 1px solid grey;
+
+  font-size: 20px;
+
+  background: transparent;
+  transition: border 0.3s ease-out, background 0.3s ease-out,
+    color 0.3s ease-out;
+
+  border-radius: 15px;
+
+  &:hover {
+    color: #ffffff;
+    border: 1px solid palevioletred;
+    background: palevioletred;
+  }
+`;
+
+export const HomeLink = styled(Link)`
+  padding: 16px 24px;
+  border: 1px solid grey;
+
+  font-size: 20px;
+
+  background: transparent;
+  transition: border 0.3s ease-out, background 0.3s ease-out,
+    color 0.3s ease-out;
+
+  border-radius: 15px;
+
+  &:hover {
+    color: #ffffff;
+    border: 1px solid #ebbf32;
+    background: #ebbf32;
+`;
+
 export const QuizBackground = styled.div`
+  position: relative;
+
   width: 780px;
   margin: 0 auto;
   margin-bottom: 24px;
@@ -46,7 +113,6 @@ export const AnswerLabel = styled.label`
   cursor: pointer;
 `;
 
-
 ///
 
 export const Title = styled.h2`
@@ -62,8 +128,6 @@ export const ResultTitle = styled.h3`
   font-size: 24px;
   text-align: center;
 `;
-
-
 
 export const QuizQuestion = styled.p`
   margin-bottom: 24px;
@@ -105,4 +169,28 @@ export const InputItems = styled.li`
   margin-bottom: 20px;
 `;
 
+export const QuizEditBtn = styled.li`
+  margin-bottom: 20px;
+`;
+export const CloseBtn = styled.button`
+  width: 24px;
+  height: 24px;
+  stroke: #000000;
+`;
 
+export const AddQuestionList = styled.ul`
+  margin-bottom: 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+export const IconClose = styled.svg`
+  position: absolute;
+  right: 24px;
+  top: 24px;
+
+  width: 24px;
+  height: 24px;
+  stroke: #000000;
+`;

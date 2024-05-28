@@ -1,11 +1,22 @@
-import { Link } from 'react-router-dom';
-import { AddQuizLink, MainTitle, QuizBackground } from './QuizList.styled';
+import { Link, useNavigate } from 'react-router-dom';
+import {
+  AddQuizLink,
+  ButtonContainer,
+  IconEdit,
+  IconTrash,
+  LinkEdit,
+  MainTitle,
+  QuizBackground,
+  TrashBtn,
+} from './QuizList.styled';
 import { quiz } from 'quiz';
 import { useEffect, useState } from 'react';
+import icon from '../../assets/sprite.svg';
 
 const QuizList = () => {
   const [initialQuiz, setInitialQuiz] = useState(null);
   // localStorage.setItem('quiz', JSON.stringify(quiz));
+  const navigate = useNavigate();
 
   useEffect(() => {
     const storedQuiz = localStorage.getItem('quiz');
@@ -22,7 +33,10 @@ const QuizList = () => {
     return <div>Loading...</div>;
   }
 
-  const handleDeleteItem = itemId => {
+  const handleDeleteItem = (e, itemId) => {
+    e.stopPropagation();
+
+    e.preventDefault();
     const idxToDelete = initialQuiz.notices.findIndex(
       notice => notice.id === itemId
     );
@@ -43,22 +57,48 @@ const QuizList = () => {
     setInitialQuiz(updatedQuizList);
   };
 
+  const handleEdit = (e, id) => {
+    e.stopPropagation();
+    e.preventDefault();
+
+    navigate(`/edit/${id}`);
+  };
+
   return (
     <>
+      <AddQuizLink to={'/add'}>Add New Quiz +</AddQuizLink>
+
       <MainTitle>Quizes</MainTitle>
-      <AddQuizLink to={'/add'}>Add Quiz +</AddQuizLink>
       <ul>
         {initialQuiz.notices.map((notice, index) => (
           <li key={index} id={notice.id}>
             <Link to={`/quiz/${notice.id}`}>
               <QuizBackground>
-                <h3>{notice.quizName}</h3>
-                <p>Number of questions {notice.questions.length}</p>
+                <div>
+                  <h3>{notice.quizName}</h3>
+                  <p>Number of questions {notice.questions.length}</p>
+                </div>
+
+                <ButtonContainer>
+                  <LinkEdit
+                    // to={`/edit/${notice.id}`}
+                    onClick={e => {
+                      handleEdit(e, notice.id);
+                    }}
+                  >
+                    <IconEdit>
+                      <use href={`${icon}#icon-edit`}></use>
+                    </IconEdit>
+                  </LinkEdit>
+
+                  <TrashBtn onClick={e => handleDeleteItem(e, notice.id)}>
+                    <IconTrash>
+                      <use href={`${icon}#icon-trash`}></use>
+                    </IconTrash>
+                  </TrashBtn>
+                </ButtonContainer>
               </QuizBackground>
             </Link>
-
-            <button onClick={() => handleDeleteItem(notice.id)}>Delete</button>
-            <Link to={`/edit/${notice.id}`}>Edit</Link>
           </li>
         ))}
       </ul>
