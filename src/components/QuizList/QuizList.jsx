@@ -3,7 +3,7 @@ import { AddQuizLink, MainTitle, QuizBackground } from './QuizList.styled';
 import { quiz } from 'quiz';
 import { useEffect, useState } from 'react';
 
-const QuizList = ({ setId }) => {
+const QuizList = () => {
   const [initialQuiz, setInitialQuiz] = useState(null);
   // localStorage.setItem('quiz', JSON.stringify(quiz));
 
@@ -22,13 +22,7 @@ const QuizList = ({ setId }) => {
     return <div>Loading...</div>;
   }
 
-  const handleSetId = id => {
-    setId(id);
-  };
-
   const handleDeleteItem = itemId => {
-    setId(itemId);
-
     const idxToDelete = initialQuiz.notices.findIndex(
       notice => notice.id === itemId
     );
@@ -42,16 +36,12 @@ const QuizList = ({ setId }) => {
       ...initialQuiz.notices.slice(idxToDelete + 1),
     ];
 
-    const updatedQuiz = { ...initialQuiz, notices: updatedNotices };
+    const updatedQuizList = { ...initialQuiz, notices: updatedNotices };
 
-    localStorage.setItem('quiz', JSON.stringify(updatedQuiz));
+    localStorage.setItem('quiz', JSON.stringify(updatedQuizList));
 
-    setInitialQuiz(updatedQuiz);
+    setInitialQuiz(updatedQuizList);
   };
-  // const getQuiz = localStorage.getItem('quiz');
-  // const parsedQuiz = JSON.parse(getQuiz);
-  // console.log(initialQuiz);
-  // const { notices } = parsedQuiz;
 
   return (
     <>
@@ -60,17 +50,15 @@ const QuizList = ({ setId }) => {
       <ul>
         {initialQuiz.notices.map((notice, index) => (
           <li key={index} id={notice.id}>
-            <Link
-              to={`/:${notice.id}`}
-              onClick={() => handleSetId(notice.id)}
-              id={notice.id}
-            >
+            <Link to={`/quiz/${notice.id}`}>
               <QuizBackground>
                 <h3>{notice.quizName}</h3>
                 <p>Number of questions {notice.questions.length}</p>
               </QuizBackground>
             </Link>
+
             <button onClick={() => handleDeleteItem(notice.id)}>Delete</button>
+            <Link to={`/edit/${notice.id}`}>Edit</Link>
           </li>
         ))}
       </ul>
