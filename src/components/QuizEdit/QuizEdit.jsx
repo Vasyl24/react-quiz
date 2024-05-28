@@ -4,10 +4,16 @@ import {
   AnswerItem,
   AnswerLabel,
   AnswerList,
+  Input,
+  InputItems,
+  Label,
   QuestionNumber,
   QuestionText,
   QuizBackground,
+  QuizQuestion,
   QuizTitle,
+  ResultTitle,
+  SubmitBtn,
 } from './QuizEdit.styled';
 import { useEffect, useState } from 'react';
 import { quiz } from 'quiz';
@@ -15,7 +21,25 @@ import { useParams } from 'react-router-dom';
 
 const QuizEdit = () => {
   const [showDeleteBtn, setShowDeleteBtn] = useState(false);
+  const [showAddForm, setShowAddForm] = useState(false);
   const [initialQuiz, setInitialQuiz] = useState(null);
+
+  ////
+
+  const [inputQuestionValue, setInputQuestionValue] = useState('');
+  const [inputResponseValue, setInputResponseValue] = useState('');
+
+  const [quizQuestion, setQuizQuestion] = useState({
+    questionNum: 0,
+    questionText: '',
+    answList: [],
+    rightAnswer: '',
+  });
+
+  const [isAnswered, setIsAnswered] = useState(false);
+  const [userAnswer, setUserAnswer] = useState(null);
+
+  ////
 
   const { quizId } = useParams();
 
@@ -91,10 +115,182 @@ const QuizEdit = () => {
     setInitialQuiz(updatedQuiz);
   }
 
+  ////
+
+  function handleQuestionWrite(e) {
+    setInputQuestionValue(e.target.value);
+  }
+
+  function handleResponseWrite(e) {
+    setInputResponseValue(e.target.value);
+  }
+
+  function handleChooseAnswer(e) {
+    setIsAnswered(true);
+    setUserAnswer(e.target.value);
+  }
+
+  function addQuestion(e) {
+    e.preventDefault();
+
+    setQuizQuestion({
+      ...quizQuestion,
+      questionText: inputQuestionValue,
+    });
+
+    setInputQuestionValue('');
+  }
+
+  function addResponse(e) {
+    e.preventDefault();
+
+    if (quizQuestion.answList.length < 5) {
+      quizQuestion.answList.push(inputResponseValue);
+    }
+
+    setInputResponseValue('');
+  }
+
+  const lastQuestionNumber = notice.questions.length - 1;
+
+  function addQuestionForm(e) {
+    e.preventDefault();
+
+    setIsAnswered(false);
+
+    quizQuestion.rightAnswer = userAnswer;
+    quizQuestion.questionNum = lastQuestionNumber + 1;
+
+    notice.questions.push(quizQuestion);
+
+    const updatedNotice = {
+      ...notice,
+    };
+
+    const idxToChange = initialQuiz.notices.findIndex(
+      idx => idx.id === notice.id
+    );
+
+    if (idxToChange === -1) {
+      return;
+    }
+
+    const updatedNotices = [
+      ...initialQuiz.notices.slice(0, idxToChange),
+      updatedNotice,
+      ...initialQuiz.notices.slice(idxToChange + 1),
+    ];
+
+    const updatedQuiz = {
+      ...initialQuiz,
+      notices: updatedNotices,
+    };
+
+    localStorage.setItem('quiz', JSON.stringify(updatedQuiz));
+
+    setInitialQuiz(updatedQuiz);
+
+    setQuizQuestion({
+      ...quizQuestion,
+      questionNum: 0,
+      questionText: '',
+      answList: [],
+      rightAnswer: '',
+    });
+  }
+
   return (
     <>
-      <button>Add question</button>
-      <button onClick={() => setShowDeleteBtn(true)}>Delete question</button>
+      <button
+        onClick={() => {
+          setShowDeleteBtn(false);
+          setShowAddForm(true);
+        }}
+      >
+        Add question
+      </button>
+      <button
+        onClick={() => {
+          setShowAddForm(false);
+          setShowDeleteBtn(true);
+        }}
+      >
+        Delete question
+      </button>
+
+      {showAddForm && (
+        <>
+          <ul>
+            <InputItems>
+              <form action="">
+                <Label htmlFor="quiz-question">Question</Label>
+                <Input
+                  type="text"
+                  id="quiz-question"
+                  value={inputQuestionValue}
+                  onChange={handleQuestionWrite}
+                />
+
+                <SubmitBtn type="submit" onClick={addQuestion}>
+                  Add question
+                </SubmitBtn>
+              </form>
+            </InputItems>
+
+            <InputItems>
+              <form action="">
+                <Label htmlFor="quiz-response">Response</Label>
+                <Input
+                  type="text"
+                  id="quiz-response"
+                  value={inputResponseValue}
+                  onChange={handleResponseWrite}
+                />
+
+                <SubmitBtn
+                  type="submit"
+                  onClick={addResponse}
+                  disabled={quizQuestion.answList.length === 5}
+                >
+                  Add response
+                </SubmitBtn>
+              </form>
+            </InputItems>
+          </ul>
+          <ResultTitle>Previous quiz view</ResultTitle>
+
+          <form>
+            <QuizQuestion>{quizQuestion.questionText}</QuizQuestion>
+
+            <AnswerList>
+              {quizQuestion.answList.map((answer, index) => {
+                const id = `answer-${nanoid()}`;
+
+                return (
+                  <AnswerItem key={index}>
+                    <AnswerInput
+                      type="radio"
+                      id={`answer-${id}`}
+                      name="answer"
+                      value={answer}
+                      onChange={handleChooseAnswer}
+                    />
+                    <AnswerLabel htmlFor={`answer-${id}`}>{answer}</AnswerLabel>
+                  </AnswerItem>
+                );
+              })}
+            </AnswerList>
+
+            {quizQuestion.questionText &&
+              quizQuestion.answList.length >= 2 &&
+              isAnswered && (
+                <SubmitBtn type="submit" onClick={addQuestionForm}>
+                  Confirm
+                </SubmitBtn>
+              )}
+          </form>
+        </>
+      )}
 
       {quizComponents.map(
         quizComponent =>

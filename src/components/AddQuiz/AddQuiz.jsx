@@ -100,14 +100,16 @@ const AddQuiz = () => {
       rightAnswer: '',
     });
   }
+
   const currentLocalStorage = localStorage.getItem('quiz');
   const currentQuiz = JSON.parse(currentLocalStorage);
   currentQuiz.notices.push(quizForm);
 
   function addNewQuiz(e) {
     e.preventDefault();
+
     quizForm.id = nanoid();
-    console.log(quizForm.id);
+
     localStorage.setItem('quiz', JSON.stringify(currentQuiz));
   }
 
@@ -129,6 +131,7 @@ const AddQuiz = () => {
             </SubmitBtn>
           </form>
         </InputItems>
+
         <InputItems>
           <form action="">
             <Label htmlFor="quiz-question">Question</Label>
@@ -144,6 +147,7 @@ const AddQuiz = () => {
             </SubmitBtn>
           </form>
         </InputItems>
+
         <InputItems>
           <form action="">
             <Label htmlFor="quiz-response">Response</Label>
@@ -167,8 +171,8 @@ const AddQuiz = () => {
 
       <ResultTitle>Previous quiz view</ResultTitle>
 
+      <QuizTitle>Quiz Title: {quizForm.quizName}</QuizTitle>
       <form>
-        <QuizTitle>{quizForm.quizName}</QuizTitle>
         <QuizQuestion>{quizQuestion.questionText}</QuizQuestion>
 
         <AnswerList>
@@ -220,6 +224,7 @@ const AddQuiz = () => {
                         type="radio"
                         name="answer"
                         id={`answer-${id}`}
+                        checked={answerItem}
                         disabled
                       />
                       <AnswerLabel htmlFor={`answer-${id}`}>
@@ -229,14 +234,15 @@ const AddQuiz = () => {
                   );
                 })}
               </AnswerList>
-              {quizForm.quizName !== '' && quizForm.questions.length >= 1 && (
-                <SubmitBtn type="submit" onClick={addNewQuiz}>
-                  Add quiz
-                </SubmitBtn>
-              )}
             </form>
           </li>
         ))}
+
+        {quizForm.quizName !== '' && quizForm.questions.length >= 1 && (
+          <SubmitBtn type="submit" onClick={addNewQuiz}>
+            Add quiz
+          </SubmitBtn>
+        )}
       </ul>
     </>
   );
