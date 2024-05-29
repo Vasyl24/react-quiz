@@ -188,6 +188,10 @@ export const QuizEditBtn = styled.li`
   margin-bottom: 20px;
 `;
 export const CloseBtn = styled.button`
+  position: absolute;
+  right: 24px;
+  top: 24px;
+
   width: 24px;
   height: 24px;
   stroke: #000000;
@@ -201,10 +205,6 @@ export const AddQuestionList = styled.ul`
 `;
 
 export const IconClose = styled.svg`
-  position: absolute;
-  right: 24px;
-  top: 24px;
-
   width: 24px;
   height: 24px;
   stroke: #000000;

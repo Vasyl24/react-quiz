@@ -77,7 +77,7 @@ const QuizEdit = () => {
   const quizComponents = parsedQuiz.notices;
 
   function handleDeleteQuestion(e) {
-    const questionToDelete = e.target.id;
+    const questionToDelete = e.currentTarget.id;
 
     const idxToDelete = notice.questions.findIndex(
       question => question.questionNum === Number(questionToDelete)
